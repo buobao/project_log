@@ -1,5 +1,5 @@
 
-# 三方库
+# 第三方库
 ## framework
 - volley:1.0.0
 - gson:2.4
