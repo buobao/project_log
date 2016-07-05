@@ -63,6 +63,35 @@
 # Network
 > 网络请求库
 ---
+#### OkHttpStack
+> OkHttp请求栈，用于创建volley请求队列实例：requestQueue = Volley.newRequestQueue(context, new OkHttpStack());
+
+#### VolleyRequestQueue
+> volley请求队列，单例
+
+#### VolleyMethodToString
+> 请求码转换：0-Get，1-Post，2-Put，3-Delete，4-Head，5-Options，6-Trace，7-Patch
+
+#### GsonRequest
+> 自定义Gson Request ，配置GSON解析请求数据
+
+#### AbstractFrameApi
+> 请求接口抽象类
+- **startRequest()** 这里发送一个gsonresquest到请求queue 
+
+#### JsonEncode
+> json格式请求参数格式化
+- **encode()** 将object转换为json字符并返回制定charset的字节数组
+
+#### ProgressRequestBody
+> 上传进度，继承自OkHttp RequestBody
+
+#### ProgressResponseBody
+> 下载进度
+
+
+
+
 
 
 
