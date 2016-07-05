@@ -51,6 +51,23 @@
 #### GlobalGlideModule
 > glide自定义设置，这里设置内容：1.设置磁盘缓存大小，2.设置内存缓存区，3.指定默认into View。
 
+#### LogListener
+> glide加载日志监听
+
+#### RoundImageViewTarget
+> 圆形图片加载
+
+# Model
+> 几个基本Gson实体模型定义：1.CoreResponse 基本Response模型，2.UploadModel 数据上传json模型，3.AppUpdateProgress app升级进度
+---
+# Network
+> 网络请求库
+---
+
+
+
+
+
 
 
 
