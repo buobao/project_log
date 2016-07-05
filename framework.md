@@ -13,9 +13,90 @@
 - **initViews** view初始化
 - **setUniversalToolbar** 设置通用的toolbar，设置标题、默认添加返回按钮,setUniversalToolbar只需调用一次
 - **setToolbarTitle** 设置ToolbarTitle
--**snack** snackbar调用
--**toast** toast调用
--**netWorkUnable** 网络不可用
--**startPermissionSetting** 打开权限设置页面
--**hideKeyboard** 隐藏软件盘
+- **snack** snackbar调用
+- **toast** toast调用
+- **netWorkUnable** 网络不可用
+- **startPermissionSetting** 打开权限设置页面
+- **hideKeyboard** 隐藏软件盘
+- **showLoadingDialog** 显示进度dialog
+- **cancelLoadingDialog** 取消进度dialog
+
+#### AbstractFragment
+- **iSnack** snackbar接口，用于显示snackbar
+- **isPrepared** 标志初始化是否完成
+- **isVisible** 页面是否可见
+- **loadingDialog** 加载进度框
+- **setUserVisibleHint** 这里复写fragment的该方法，1.获取当前是否可见，2.实现控制数据加载（当前fragment可见时加载数据）
+- **onVisible** 可见时处理，加载数据
+- **onInvisible** 不可见时处理
+- **lazyLoad，loadDate**记载数据
+
+#### AbstractWrapAdapter
+> 处理两件事：1.item点击事件；2.是否可加载更多。
+
+#### BaseAdapter1
+> 单ViewType adapter封装
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
