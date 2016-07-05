@@ -1,7 +1,61 @@
 
 # 第三方库
 ## framework
-- volley:1.0.0
+- volley:1.0.0 网络请求库 项目地址：[Github](https://github.com/mcxiaoke/android-volley)
+> volley使用简介：
+>> ![工作原理图](http://static.open-open.com/lib/uploadImg/20151227/20151227213950_7.png)
+>>> 上图是volley的工作原理图。
+>>>> 发送请求的3个步骤 ：1.创建RequestQueue对象，定义网络请求队列；2.创建XXXRequest对象(XXX代表String,JSON,Image等等)，定义网络数据请求的详细过程；3.把XXXRequest对象添加到RequestQueue中，开始执行网络请求。以下是一个代码示例:[参考](http://www.open-open.com/lib/view/open1451223702339.html)
+``` java
+        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+        //Volley提供了JsonObjectRequest、JsonArrayRequest、StringRequest等Request形式
+        //1.Get
+        String url = "http://www.baidu.com/newslist/";
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                // 打印出GET请求返回的字符串
+                Toast.makeText(MainActivity.this, s, Toast.LENGTH_LONG).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+            }
+        });
+        
+        // Post
+        String url = "http://ce.sysu.edu.cn/hope/";
+        // 创建StringRequest，定义字符串请求的请求方式为POST，
+        StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            // 请求成功后执行的函数
+            @Override
+            public void onResponse(String s) {
+                // 打印出POST请求返回的字符串
+                Toast.makeText(MainActivity.this, "POST: " + s, Toast.LENGTH_LONG).show();
+            }
+        }, new Response.ErrorListener() {
+            // 请求失败时执行的函数
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+            }
+        }){
+            // 定义请求数据
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> hashMap = new HashMap<String, String>();
+                hashMap.put("phone", "11111");
+                return hashMap;
+            }
+        };
+        // 设置该请求的标签
+        request.setTag("abcPost");
+        // 将请求添加到队列中
+        queue.add(request);
+        
+        //取消请求
+        queue.cancelAll("abcPost"); //取消标签为abcPost的请求
+        queue.cancelAll(this); //取消所有请求
+```
 - gson:2.4
 - okhttp:2.5.0
 - glide:3.7.0
