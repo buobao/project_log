@@ -141,10 +141,13 @@ private void checkAndDownload() {
         }
         final File file = new File(new File(cacheDir), apkName + "-" + versionCode + ".apk");
         if (file.exists()) {//已经下载到本地
+            //这里处理安装程序
             successAndInstall(file);
             EventBus.getDefault().post(new AppUpdateProgress(0, 100));
             return;
         }
+        //下载app task定义，注意addProgressResponseListener的实现，这里通过okhttp拦截器获取下载进度
+        //未找到Event register，不知道当前eventbus在哪里处理消息
         downloadTask = new DownloadTask(ProgressHelper.addProgressResponseListener(okHttpClient, new IProgressResponseListener() {
             @Override
             public void onResponseProgress(long bytesRead, long contentLength, boolean done) {
@@ -183,10 +186,84 @@ private void checkAndDownload() {
                 }
             }
         });
+        //执行task
         downloadTask.execute();
+    }
+    
+    private void successAndInstall(File file) {
+        builder.setContentText(getString(R.string.app_update_complete))
+                .setContentInfo("")
+                .setProgress(0, 0, false)
+                .setContentIntent(PendingIntent.getActivity(this, 0, getInstallIntent(file),        PendingIntent.FLAG_CANCEL_CURRENT)) 
+                .setAutoCancel(true);
+        notification();
+        startActivity(getInstallIntent(file));
+        stopSelf();
+    }
+    // 获取安装Intent,注意type类型
+    private Intent getInstallIntent(File file) {
+        try {
+            Intent intent = new Intent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+            return intent;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Intent();
+        }
     }
 ```
 
+#### ImageDownloadService
+> 这里维护了一个图片下载的任务列表，通过线程池实现多任务下载管理，详见解析：
+
+```java
+//线程池管理
+//创建
+singleTaskExecutor = Executors.newSingleThreadExecutor();
+//关闭
+singleTaskExecutor.shutdown();
+//任务添加
+private void addTask(final String url) {
+        if (TextUtils.isEmpty(cacheDir)) {//SD卡不可用
+            Toast.makeText(getApplicationContext(), getString(R.string.sd_unable), Toast.LENGTH_SHORT).show();
+            stopSelf();
+            return;
+        }
+        final File file = new File(new File(cacheDir), MD5Util.md5(url) + ".jpg");
+        if (file.exists()) {//当前图片已经存在
+            Toast.makeText(getApplicationContext(), getString(R.string.image_download_already), Toast.LENGTH_SHORT).show();
+            stopSelf();
+            return;
+        }
+        //任务计数
+        taskCount++;
+        new DownloadTask(ProgressHelper.addProgressResponseListener(okHttpClient, new IProgressResponseListener() {
+            @Override
+            public void onResponseProgress(long bytesRead, long contentLength, boolean done) {//非UI线程
+                if (done)
+                    Logger.t(TAG).d("File size : %s", Formatter.formatFileSize(ImageDownloadService.this, contentLength));
+                Logger.t(TAG).d("progress read : %d - sum : %d - progrss : %d - done : %b", bytesRead, contentLength, bytesRead * 100 / contentLength, done);
+            }
+        }), url, file, new IDownloadResult() {
+            @Override
+            public void result(boolean error) {//UI线程
+                int stringRes = error ? R.string.image_download_error : R.string.image_download_success;
+                if (!error) {
+                //这里讲图片显示到相册
+                MediaScannerConnection.scanFile(getApplicationContext(), new String[]{Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getPath() + "/" +MD5Util.md5(url) + ".jpg"},  null, null);
+            }
+                Toast.makeText(getApplicationContext(), getString(stringRes), Toast.LENGTH_SHORT).show();
+                taskCount--;
+                if (taskCount == 0)
+                    stopSelf();
+            }
+        }).executeOnExecutor(singleTaskExecutor);
+    }
+
+
+```
 
 
 
