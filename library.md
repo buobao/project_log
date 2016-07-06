@@ -66,8 +66,7 @@
 - rxjava:proguard-rules:1.1.5.0  rx混淆配置
 - rxbinding:0.4.0
 - rxlifecycle:0.6.1 和 rxlifecycle-components:0.6.1
-> rxlifecycle用来严格控制由于发布了一个订阅后，由于没有及时取消，导致Activity/Fragment无法销毁导致的内存泄露。
-> 使用方式：Activity/Fragment需继承RxAppCompatActivity/RxFragment，目前支持的有RxAppCompatActivity、RxFragment、RxDialogFragment、RxFragmentActivity。
+> rxlifecycle用来严格控制由于发布了一个订阅后，由于没有及时取消，导致Activity/Fragment无法销毁导致的内存泄露。使用方式：Activity/Fragment需继承RxAppCompatActivity/RxFragment，目前支持的有RxAppCompatActivity、RxFragment、RxDialogFragment、RxFragmentActivity。
 
 ## App
 - litepal:1.3.0  SQlite操作 项目地址：[Github](https://github.com/LitePalFramework/LitePal)
@@ -76,3 +75,10 @@
 - com.alexvasilkov:gesture-views:2.1.1 一个手势库 项目地址：[Github](https://github.com/alexvasilkov/GestureViews)
 - MPAndroidChart:v2.2.4 开源图标库 项目地址：[Github](https://github.com/PhilJay/MPAndroidChart)
 - advrecyclerview:0.9.1@aar 扩展RecyclerView 项目地址：[Github](https://github.com/h6ah4i/android-advancedrecyclerview)
+
+
+
+
+
+
+
