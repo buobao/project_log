@@ -251,7 +251,7 @@ private void addTask(final String url) {
             public void result(boolean error) {//UI线程
                 int stringRes = error ? R.string.image_download_error : R.string.image_download_success;
                 if (!error) {
-                //这里讲图片显示到相册
+                //这里将图片显示到相册
                 MediaScannerConnection.scanFile(getApplicationContext(), new String[]{Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getPath() + "/" +MD5Util.md5(url) + ".jpg"},  null, null);
             }
                 Toast.makeText(getApplicationContext(), getString(stringRes), Toast.LENGTH_SHORT).show();
@@ -261,9 +261,79 @@ private void addTask(final String url) {
             }
         }).executeOnExecutor(singleTaskExecutor);
     }
-
-
 ```
+
+#### UploadService
+> UploadService 线程池实现多文件上传
+
+```java
+//OkHttp几个参数设置
+okHttpClient.setConnectTimeout(15, TimeUnit.SECONDS);
+okHttpClient.setWriteTimeout(15, TimeUnit.SECONDS);
+okHttpClient.setReadTimeout(15, TimeUnit.SECONDS);
+    
+    //压缩图片，这里传入的是原始图片的路径数组，注意ImageCompressTask中封装了图片压缩的功能，ICompressResult中获取到的是
+    //压缩后的图片路径
+    private void compress(ArrayList<String> list, int imageCompressType) {
+        new ImageCompressTask(compressDir, list, imageCompressType, new ICompressResult() {
+            @Override
+            public void result(ArrayList<String> result) {
+                for (String s : result) {
+                    addTask(s);
+                }
+            }
+        }).execute();
+    }
+    
+    //添加上传任务
+    private void addTask(String path) {
+        final File file = new File(path);
+        final RequestBody requestBody = new MultipartBuilder()
+                .type(MultipartBuilder.FORM)
+                .addPart(Headers.of("Content-Disposition",
+                        "form-data; name=\"pic\";filename=\"" + file.getName() + ".jpg\"")
+                        , RequestBody.create(MediaType.parse("application/octet-stream"), file))
+                .build();
+        new StringUploadTask(okHttpClient, AGENCY_PIC_URL, path, ProgressHelper.addProgressRequestListener(requestBody, new IProgressRequestListener() {
+            @Override
+            public void onRequestProgress(long bytesWritten, long contentLength, boolean done) {
+                Logger.t(TAG).d("progress write : %d - sum : %d - progrss : %d - done : %b", bytesWritten, contentLength, bytesWritten * 100 / contentLength, done);
+            }
+        }), new IUploadResult<String>() {
+            @Override
+            public void result(UploadModel<String> uploadModel) {
+                Logger.t(TAG).d("upload result : %b url : [%s]\npath : [%s]", uploadModel.isSuccess(), uploadModel.getResponse(), uploadModel.getPath());
+            }
+        }).executeOnExecutor(singleTaskExecutor);
+    }
+    
+    //binder定义，这里为其他组件调用service提供了几个常用的接口
+    public class UploadBinder extends Binder {
+        //压缩上传，默认300k
+        public void upload(ArrayList<String> list) {
+            compress(list, 300);
+        }
+        //压缩上传，可以指定压缩大小
+        public void upload(ArrayList<String> list, int imageCompressType) {
+            compress(list, imageCompressType);
+        }
+        //只压缩
+        public void onlyCompress(ArrayList<String> list) {
+            compressOnly(list, 300);
+        }
+    }
+```
+
+# Task
+> 几个常用的Task封装，DownloadTask：文件下载task，ImageCompressTask:图片压缩task，StringUploadTask：文件上传task
+
+# Utils
+> 工具类
+
+# Widget
+> 抽象类组件 AbstractLoadView:自定义加载View，AbstractRecyclerView：自定义RecycleView，AbstractSpecialLoadView：特殊的自定义加载view，CompatCollapsingToolbarLayout：透明状态栏4.4解决方案，CompatToolbar：透明状态栏4.4解决方案，CProgressDialog：自定义对话框，MaterialSearchView：自定义SearchView
+
+
 
 
 
