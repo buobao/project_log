@@ -57,12 +57,22 @@
         queue.cancelAll("abcPost"); //取消标签为abcPost的请求
         queue.cancelAll(this); //取消所有请求
 ```
+
 - gson:2.4
 - okhttp:2.5.0
 - glide:3.7.0
 - logger:1.11
 - rxandroid:1.2.0
 - eventbus:3.0.0
+
+> 基本使用：
+```java
+    //注册
+    EventBus.getDefault().register(this);
+    //注册一个消息处理对象
+    //EventBus.getDefault().register(new MyClass());  
+```
+
 - rxbinding:0.4.0
 - rxjava:proguard-rules:1.1.5.0  rx混淆配置
 - rxbinding:0.4.0
