@@ -3,11 +3,11 @@
 ## framework
 - volley:1.0.0 网络请求库 项目地址：[Github](https://github.com/mcxiaoke/android-volley)
 
-> volley使用简介：
- ![工作原理图](http://static.open-open.com/lib/uploadImg/20151227/20151227213950_7.png)
-上图是volley的工作原理图。
-发送请求的3个步骤 ：1.创建RequestQueue对象，定义网络请求队列；2.创建XXXRequest对象(XXX代表String,JSON,Image等等)，定义网络数据请求的详细过程；3.把XXXRequest对象添加到RequestQueue中，开始执行网络请求。以下是一个代码示例:[参考](http://www.open-open.com/lib/view/open1451223702339.html)
-``` java
+    > volley使用简介：
+    ![工作原理图](http://static.open-open.com/lib/uploadImg/20151227/20151227213950_7.png)
+    上图是volley的工作原理图。
+    发送请求的3个步骤 ：1.创建RequestQueue对象，定义网络请求队列；2.创建XXXRequest对象(XXX代表String,JSON,Image等等)，定义网络    数据请求的详细过程；3.把XXXRequest对象添加到RequestQueue中，开始执行网络请求。以下是一个代码示例:[参考](http://www.open-open.com/lib/view/open1451223702339.html)
+    ``` java
         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
         //Volley提供了JsonObjectRequest、JsonArrayRequest、StringRequest等Request形式
         //1.Get
@@ -56,7 +56,7 @@
         //取消请求
         queue.cancelAll("abcPost"); //取消标签为abcPost的请求
         queue.cancelAll(this); //取消所有请求
-```
+    ```
 
 - gson:2.4
 - okhttp:2.5.0
@@ -65,20 +65,21 @@
 - rxandroid:1.2.0
 - eventbus:3.0.0
 
-> 基本使用：
-```java
+    > 基本使用：
+
+    ```java
     //注册
     EventBus.getDefault().register(this);
     //注册一个消息处理对象
     //EventBus.getDefault().register(new MyClass());  
-```
+    ```
 
 - rxbinding:0.4.0
 - rxjava:proguard-rules:1.1.5.0  rx混淆配置
 - rxbinding:0.4.0
 - rxlifecycle:0.6.1 和 rxlifecycle-components:0.6.1
 
-> rxlifecycle用来严格控制由于发布了一个订阅后，由于没有及时取消，导致Activity/Fragment无法销毁导致的内存泄露。使用方式：Activity/Fragment需继承RxAppCompatActivity/RxFragment，目前支持的有RxAppCompatActivity、RxFragment、RxDialogFragment、RxFragmentActivity。
+    > rxlifecycle用来严格控制由于发布了一个订阅后，由于没有及时取消，导致Activity/Fragment无法销毁导致的内存泄露。使用方式：Activity/Fragment需继承RxAppCompatActivity/RxFragment，目前支持的有RxAppCompatActivity、RxFragment、RxDialogFragment、RxFragmentActivity。
 
 ## App
 - litepal:1.3.0  SQlite操作 项目地址：[Github](https://github.com/LitePalFramework/LitePal)
