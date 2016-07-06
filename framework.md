@@ -109,6 +109,86 @@
 #### UniversalApi
 > 通用请求Api,抽象基类,继承自AbstractFrameApi
 
+# Rx
+> 几个Subscribe定义，FolderSizeOnSubcribe：文件大小计算，ClearGlideCacheOnSubscribe：清除glide缓存
+
+# Service
+> android service组件定义，ApkDownloadService：App下载安装；ImageDownloadService：图片下载；UploadService：文件上传
+
+- **ApkDownloadService** 
+```java
+//下载app
+private void checkAndDownload() {
+        //包名
+        String apkName = AppUpdateUtil.getApkName(this);
+        //app 下载url
+        String url = AppUpdateUtil.getUpdateUrl(this);
+        //更新版本号
+        int versionCode = AppUpdateUtil.getUpdateVerisonCode(this);
+        // SD卡是否可用
+        if (TextUtils.isEmpty(cacheDir)) {//SD卡不可用
+            builder.setContentText(getString(R.string.sd_unable))
+                    .setAutoCancel(true);
+            notification();
+            stopSelf();
+            return;
+        }
+        //加载地址是否可用、版本号是否正确
+        if (TextUtils.isEmpty(url) || versionCode <= 1) {
+            Logger.t(TAG).e("下载地址为空 or VersionCode<=1");
+            stopSelf();
+            return;
+        }
+        final File file = new File(new File(cacheDir), apkName + "-" + versionCode + ".apk");
+        if (file.exists()) {//已经下载到本地
+            successAndInstall(file);
+            EventBus.getDefault().post(new AppUpdateProgress(0, 100));
+            return;
+        }
+        downloadTask = new DownloadTask(ProgressHelper.addProgressResponseListener(okHttpClient, new IProgressResponseListener() {
+            @Override
+            public void onResponseProgress(long bytesRead, long contentLength, boolean done) {
+                Logger.t(TAG).d("progress read : %d - sum : %d - progrss : %d - done : %b", bytesRead, contentLength, bytesRead * 100 / contentLength, done);
+                if (done) {//下载完成
+                    successAndInstall(file);
+                    EventBus.getDefault().post(new AppUpdateProgress(0, 100));
+                } else {//正在下载
+                    final int current = (int) (bytesRead * 100 / contentLength);
+                    if (current > progress || progress == 0) {
+                        progress = current;
+                        builder.setContentText(getString(R.string.app_update_progress))
+                                .setContentInfo(progress + "%")
+                                .setProgress(100, progress, false)
+                                .setAutoCancel(false);
+                        notification();
+                        EventBus.getDefault().post(new AppUpdateProgress(1, progress));
+                    }
+                }
+            }
+        }), url, file, new IDownloadResult() {
+            @Override
+            public void result(boolean error) {
+                if (error) {//下载失败
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                    builder.setContentText(getString(R.string.app_update_error))
+                            .setContentInfo("")
+                            .setProgress(0, 0, false)
+                            .setContentIntent(PendingIntent.getService(ApkDownloadService.this, 0, new Intent(getApplicationContext(), ApkDownloadService.class), PendingIntent.FLAG_CANCEL_CURRENT))
+                            .setAutoCancel(true);
+                    notification();
+                    EventBus.getDefault().post(new AppUpdateProgress(2, 0));
+                    stopSelf();
+                }
+            }
+        });
+        downloadTask.execute();
+    }
+```
+
+
+
 
 
 
