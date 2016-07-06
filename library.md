@@ -3,7 +3,7 @@
 ## framework
 - volley:1.0.0 网络请求库 项目地址：[Github](https://github.com/mcxiaoke/android-volley)
 > volley使用简介：
->> ![工作原理图](http://static.open-open.com/lib/uploadImg/20151227/20151227213950_7.png)
+ ![工作原理图](http://static.open-open.com/lib/uploadImg/20151227/20151227213950_7.png)
 >>> 上图是volley的工作原理图。
 >>>> 发送请求的3个步骤 ：1.创建RequestQueue对象，定义网络请求队列；2.创建XXXRequest对象(XXX代表String,JSON,Image等等)，定义网络数据请求的详细过程；3.把XXXRequest对象添加到RequestQueue中，开始执行网络请求。以下是一个代码示例:[参考](http://www.open-open.com/lib/view/open1451223702339.html)
 ``` java
