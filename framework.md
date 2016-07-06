@@ -90,6 +90,25 @@
 #### ProgressResponseBody
 > 下载进度
 
+#### AbsJsonRequest
+> 功能与GsonRequest类似，尚不知额外用途
+
+#### AbsApi
+> api抽象基类
+
+#### ArrayMapEncode
+> 参数格式化工具
+- **encode()** 以指定字符集格式化arrayMap，返回byte[]
+
+#### CoreApi
+> 继承自AbsApi api抽象基类
+
+#### JsonApi
+> json格式参数请求,请求方式：POST
+
+#### UniversalApi
+> 通用请求Api,抽象基类,继承自AbstractFrameApi
+
 
 
 
